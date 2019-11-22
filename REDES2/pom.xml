@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.ist.rc2</groupId>
+  <artifactId>REDES2</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>REDES2</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.jung</groupId>
+      <artifactId>jung-algorithms</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/net.sf.jung/jung-graph-impl -->
+    <dependency>
+      <groupId>net.sf.jung</groupId>
+      <artifactId>jung-graph-impl</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/net.sf.jung/jung-visualization -->
+    <dependency>
+      <groupId>net.sf.jung</groupId>
+      <artifactId>jung-visualization</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/commons-collections/commons-collections -->
+    <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2.1</version>
+    </dependency>
+<!-- https://mvnrepository.com/artifact/org.openanzo.dependencies/org.apache.commons.collections15 -->
+
+
+  </dependencies>
+
+  <build>
+   <plugins>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <configuration combine.self="override">
+	     <compilerArgument>-Xlint:all</compilerArgument>
+        <source>1.8</source>
+        <target>1.8</target>
+      </configuration>
+      <version>3.1</version>
+    </plugin>
+   </plugins>
+  </build>
+</project>
