@@ -126,7 +126,7 @@ class Ultimatum{
     }
 
     public void runGame(int rounds){
-        Random rand = new Random(2666);
+        Random rand = new Random(26663);
         for( int i = 0; i<rounds; i++){ 
             if(((double)i/rounds * 100.0) % 5== 0){
                 System.out.println("round:"+i );
@@ -150,7 +150,12 @@ class Ultimatum{
                     Ultimatum.updateStrategy(p1,p2,selectProbability(p1,p2));
                 }
             }      
-        }       
+        }
+
+        // TODO: YU
+        public findOfferDistribution(){
+
+        }    
     }
 
 
