@@ -22,7 +22,7 @@ public class Main
         int iter = 5000;
 
         BarabasiAlbertGenerator graph = new BarabasiAlbertGenerator<Player,Integer>(
-        new gf(), new playerFactory(), new ef(),initV,addE,1023,seedVertices);
+        new gf(), new playerFactory('A'), new ef(),initV,addE,1023,seedVertices);
 
 
         Graph g = graph.create();
@@ -49,7 +49,7 @@ public class Main
 
         System.out.println(ug.averageP());
 
-        System.out.println(ug.averageK());
+     
     }
 
 
@@ -59,10 +59,20 @@ public class Main
 class playerFactory implements Factory<Player>{
     int count = 0;
     Random r = new Random(98822);
-    
+    char tactic = 'A'; //A, B or C
+    public playerFactory(char _tactic){
+    	tactic = _tactic;
+    }
+
     public Player create(){
         double p_q = r.nextDouble();
-        return new Player(p_q,1-p_q,count++);
+       	if(tactic == 'A'){
+        	return new Player(p_q,p_q,count++);
+    	}
+    	if(tactic == 'B'){
+    		return new Player(p_q,1-p_q,count++);
+    	}
+    	return null;
     }
 
 }
@@ -99,7 +109,7 @@ class Ultimatum{
     }
 
     public static void updateStrategy(Player p1, Player p2, Double prob){
-        Random r = new Random();
+        Random r = new Random(92777);
         if(r.nextDouble() < prob){
             p1.updatePQ(p2.p,p2.q);
         }
@@ -116,7 +126,7 @@ class Ultimatum{
     }
 
     public void runGame(int rounds){
-        Random rand = new Random();
+        Random rand = new Random(2666);
         for( int i = 0; i<rounds; i++){ 
             if(((double)i/rounds * 100.0) % 5== 0){
                 System.out.println("round:"+i );
