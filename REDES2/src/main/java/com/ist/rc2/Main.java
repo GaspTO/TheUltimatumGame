@@ -152,10 +152,6 @@ class Ultimatum{
             }      
         }
 
-        // TODO: YU
-        public findOfferDistribution(){
-
-        }    
     }
 
 
@@ -189,6 +185,12 @@ class Ultimatum{
         return total/count;
     }  
 
+
+    
+    // TODO: YU
+    public void findOfferDistribution(){
+
+    }    
 }
 
 class Player{
