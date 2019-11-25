@@ -1,0 +1,75 @@
+package com.ist.rc2;
+
+import java.util.Collection;
+import java.util.Random;
+
+import edu.uci.ics.jung.graph.Graph;
+
+
+class TaxationUG extends Ultimatum {
+    public double taxation;
+
+    public TaxationUG(Graph<Player, Integer> _g, double _taxation){
+        super(_g);
+        taxation = _taxation;
+    }
+ 
+    public double taxFitness(Player p1){
+        double taxed = p1.fitness*taxation;
+        double initfitness = p1.fitness;
+        p1.addFitness(-p1.fitness*taxed);
+        if(initfitness < p1.fitness){
+            System.out.println("erro, update taxFitness/TaxationUG weird");
+        }
+        return taxed;
+    }
+
+    public void runGame(int rounds){
+        Random rand = new Random(91772);
+        for( int i = 0; i<rounds; i++){ //over rounds
+            if(((double)i/rounds * 100.0) % 5== 0){
+                System.out.println("round:"+i );
+            }
+
+            //for each player reset fitness
+            for( Player p1:  (Collection<Player>) g.getVertices() ){
+                p1.resetFitness();            
+            }
+
+            //for each p1 play against all the p2 neighbors
+            for( Player p1:  (Collection<Player>) g.getVertices() ){
+                for( Player p2: (Collection<Player>) g.getNeighbors(p1) ){
+                    Ultimatum.play(p1,p2);
+                }
+            }
+
+            //taxation
+            double total = 0.0;
+            for( Player p1:  (Collection<Player>) g.getVertices() ){
+                total = total + taxFitness(p1);
+            }
+            
+            double give = total/g.getVertexCount();
+
+            //redistribution of taxes
+            for( Player p1:  (Collection<Player>) g.getVertices() ){
+                p1.addFitness(give);
+            }
+        
+            //for each p1, choose a random neightboard and update strategy
+            for( Player p1:  (Collection<Player>) g.getVertices() ){
+                //getsCollections.TransformsToArray[ Picks a random neighbor ]
+                if(g.getNeighborCount(p1) != 0){
+                    int l = rand.nextInt(g.getNeighborCount(p1));
+                    Player p2 = (Player) g.getNeighbors(p1).toArray()[l];
+                    Ultimatum.updateStrategy(p1,p2,selectProbability(p1,p2));
+                }
+            }      
+        }
+        
+
+
+    }
+
+
+}
