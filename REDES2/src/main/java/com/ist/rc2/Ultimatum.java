@@ -1,7 +1,31 @@
 package com.ist.rc2;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import javax.swing.BorderFactory;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.LogAxis;
+import org.jfree.chart.block.BlockBorder;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.title.TextTitle;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import edu.uci.ics.jung.graph.Graph;
 
@@ -21,7 +45,8 @@ class Ultimatum{
     }
 
     public static void updateStrategy(Player p1, Player p2, Double prob){
-        Random r = new Random(92777);
+        Random r = new Random(0);
+        double d = r.nextDouble();
         if(r.nextDouble() < prob){
             p1.updatePQ(p2.p,p2.q);
         }
@@ -97,10 +122,82 @@ class Ultimatum{
         return total/count;
     }  
 
-
     
-    // TODO: YU
-    public void findOfferDistribution(){
+    public Component ListOfferDistributionP(int round){
+    	XYDataset dataset = createDatasetP(round, g.getVertices().stream().map(p -> p.getP()).collect(Collectors.toList()));
+        JFreeChart chart = createChart(dataset, round);
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        chartPanel.setBackground(Color.white);
+        return chartPanel;
+    }
+    
 
-    }    
+	private XYDataset createDatasetP(int round, List<Double> list) {
+			XYSeries series = new XYSeries("");
+			Map<Double, MutableInt> pDistribution = pDistribution(list);
+			for (Entry<Double, MutableInt> degree : pDistribution.entrySet()) {
+				series.add(degree.getKey().doubleValue(), degree.getValue().value);
+			}
+	        XYSeriesCollection dataset = new XYSeriesCollection();
+	        dataset.addSeries(series);
+	        return dataset;
+	}
+    
+    
+    private Map<Double, MutableInt> pDistribution(List<Double> list) {
+    	Map<Double, MutableInt> map = new HashMap<Double, MutableInt>();
+		for (Double p: list) {
+			if(map.containsKey(p)) 
+				map.get(p).increment();
+			 else
+				 map.put(p, new MutableInt());
+		}
+		return map;
+	}
+
+	private JFreeChart createChart(XYDataset dataset, int round) {
+    	 JFreeChart chart = ChartFactory.createXYLineChart(
+                 "pDistribution", 
+                 "p", 
+                 "D(p)", 
+                 dataset, 
+                 PlotOrientation.VERTICAL,
+                 true, 
+                 true, 
+                 false 
+         );
+
+         XYPlot plot = chart.getXYPlot();
+
+         XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
+         renderer.setBaseShapesVisible(true);
+         renderer.setSeriesPaint(0, Color.RED);
+         renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+
+         plot.setRenderer(renderer);
+         plot.setBackgroundPaint(Color.white);
+
+         plot.setRangeGridlinesVisible(true);
+         plot.setRangeGridlinePaint(Color.BLACK);
+
+         plot.setDomainGridlinesVisible(true);
+         plot.setDomainGridlinePaint(Color.BLACK);
+
+         chart.getLegend().setFrame(BlockBorder.NONE);
+
+         chart.setTitle(new TextTitle("pDistribution",
+                         new Font("Serif", java.awt.Font.BOLD, 18)
+                 )
+         );
+
+         return chart;
+	}
+
+	public Component ListOfferDistributionQ(){
+    	g.getVertices().stream().map(p -> p.getQ()).collect(Collectors.toList());
+    	return null;
+    } 
+    
+    
 }

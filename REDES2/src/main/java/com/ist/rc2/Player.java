@@ -1,7 +1,8 @@
 package com.ist.rc2;
 
 class Player{
-    public double p;
+
+	public double p;
     public double q;
     public double fitness;
     public int id;
@@ -11,6 +12,38 @@ class Player{
         id = _id;
         fitness = 0;
     }
+    
+    public double getP() {
+		return p;
+	}
+
+	public void setP(double p) {
+		this.p = p;
+	}
+
+	public double getQ() {
+		return q;
+	}
+
+	public void setQ(double q) {
+		this.q = q;
+	}
+
+	public double getFitness() {
+		return fitness;
+	}
+
+	public void setFitness(double fitness) {
+		this.fitness = fitness;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
     public void addFitness(double u){
         fitness = fitness + u;
