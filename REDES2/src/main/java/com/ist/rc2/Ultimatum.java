@@ -29,7 +29,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import edu.uci.ics.jung.graph.Graph;
 
-class Ultimatum{
+class Ultimatum implements Game {
     public Graph<Player, Integer> g;
 
     public Ultimatum(Graph<Player, Integer> _g){
@@ -64,21 +64,24 @@ class Ultimatum{
 
     public void runGame(int rounds){
         Random rand = new Random(26663);
-        for( int i = 0; i<rounds; i++){ 
+        for( int i = 0; i<rounds; i++){ //over rounds
             if(((double)i/rounds * 100.0) % 5== 0){
                 System.out.println("round:"+i );
             }
+
+            //for each player reset fitness
             for( Player p1:  (Collection<Player>) g.getVertices() ){
                 p1.resetFitness();            
             }
 
-
+            //for each p1 play against all the p2 neighbors
             for( Player p1:  (Collection<Player>) g.getVertices() ){
                 for( Player p2: (Collection<Player>) g.getNeighbors(p1) ){
                     Ultimatum.play(p1,p2);
                 }
             }
         
+            //for each p1, choose a random neightboard and update strategy
             for( Player p1:  (Collection<Player>) g.getVertices() ){
                 //getsCollections.TransformsToArray[ Picks a random neighbor ]
                 if(g.getNeighborCount(p1) != 0){
