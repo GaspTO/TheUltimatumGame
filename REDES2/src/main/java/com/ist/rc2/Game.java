@@ -40,14 +40,14 @@ abstract class Game {
 
         }
         for( Player p1:  (Collection<Player>) g.getVertices() ){
-            int box = LineChartEx.decideBox(N,p1.p);
+            int box = PlotChart.decideBox(N,p1.p);
             B[box] = B[box]+1;
         }
         for(int i=0; i<N+1; i++){
             B[i] = B[i]/vNumber*100;
         }
 
-        LineChartEx.plot(A,B);
+        PlotChart.plot(A,B);
     }
 
     //getter

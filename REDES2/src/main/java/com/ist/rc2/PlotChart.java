@@ -45,10 +45,10 @@ import java.lang.Math;
 
 //PRAY FOR ALL THESE IMPORTS TO GO AWAY! YACK!
 
-public class LineChartEx extends JFrame {
+public class PlotChart extends JFrame {
     public double[] x;
     public double[] y;
-    public LineChartEx(double[] _x, double[] _y) {
+    public PlotChart(double[] _x, double[] _y) {
         x = _x;
         y = _y;
         initUI();
@@ -89,19 +89,20 @@ public class LineChartEx extends JFrame {
     private JFreeChart createChart(XYDataset dataset) {
 
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "Average salary per age", 
-                "Age", 
-                "Salary (€)", 
-                dataset, 
-                PlotOrientation.VERTICAL,
-                true, 
-                true, 
-                false 
-        );
+            "pDistribution", 
+            "p", 
+            "D(p)", 
+            dataset, 
+            PlotOrientation.VERTICAL,
+            true, 
+            true, 
+            false 
+    );
 
         XYPlot plot = chart.getXYPlot();
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setBaseShapesVisible(true);
         renderer.setSeriesPaint(0, Color.RED);
         renderer.setSeriesStroke(0, new BasicStroke(2.0f));
 
@@ -115,20 +116,19 @@ public class LineChartEx extends JFrame {
         plot.setDomainGridlinePaint(Color.BLACK);
 
         chart.getLegend().setFrame(BlockBorder.NONE);
+        chart.setTitle(new TextTitle("pDistribution",
+                         new Font("Serif", java.awt.Font.BOLD, 18)
+                 )
+         );
 
-        chart.setTitle(new TextTitle("Average Salary per Age",
-                        new Font("Serif", java.awt.Font.BOLD, 18)
-                )
-        );
-
-        return chart;
+         return chart;
 
     }
 
     //this actually creates the plot
     public static void plot(double[] x, double[] y){
         SwingUtilities.invokeLater(() -> {
-            LineChartEx ex = new LineChartEx(x,y);
+            PlotChart ex = new PlotChart(x,y);
             ex.setVisible(true);
         });
     }
