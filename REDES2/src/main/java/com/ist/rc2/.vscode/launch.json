@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - LineChartEx",
+            "request": "launch",
+            "mainClass": "com.ist.rc2.LineChartEx"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - LineChart_AWT",
+            "request": "launch",
+            "mainClass": "com.ist.rc2.LineChart_AWT"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - plot",
+            "request": "launch",
+            "mainClass": "main.java.com.ist.rc2.plot"
+        }
+    ]
+}

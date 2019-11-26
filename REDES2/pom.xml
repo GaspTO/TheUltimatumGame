@@ -41,6 +41,19 @@
         <version>3.2.1</version>
     </dependency>
 <!-- https://mvnrepository.com/artifact/org.openanzo.dependencies/org.apache.commons.collections15 -->
+    <!-- https://mvnrepository.com/artifact/jfree/jfreechart -->
+    <dependency>
+    	<groupId>org.jfree</groupId>
+    	<artifactId>jfreechart</artifactId>
+    	<version>1.0.19</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/jfree/jcommon -->
+    <dependency>
+        <groupId>jfree</groupId>
+        <artifactId>jcommon</artifactId>
+        <version>1.0.16</version>
+    </dependency>
+
 
 
   </dependencies>

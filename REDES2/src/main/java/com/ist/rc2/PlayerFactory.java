@@ -4,11 +4,11 @@ import java.util.Random;
 
 import org.apache.commons.collections15.Factory;
 
-class playerFactory implements Factory<Player>{
+class PlayerFactory implements Factory<Player>{
     int count = 0;
-    Random r = new Random(98822);
+    Random r = new Random();
     char tactic = 'A'; //A, B or C
-    public playerFactory(char _tactic){
+    public PlayerFactory(char _tactic){
     	tactic = _tactic;
     }
 
@@ -19,7 +19,10 @@ class playerFactory implements Factory<Player>{
     	}
     	if(tactic == 'B'){
     		return new Player(p_q,1-p_q,count++);
-    	}
+        }
+        if(tactic == 'C'){
+            return new Player(p_q, r.nextDouble(),count++);
+        }
     	return null;
     }
 

@@ -5,7 +5,9 @@ import java.util.HashSet;
 
 import edu.uci.ics.jung.algorithms.generators.random.BarabasiAlbertGenerator;
 import edu.uci.ics.jung.graph.Graph;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.lang.Math;
 
 public class Main 
 {
@@ -13,39 +15,21 @@ public class Main
     {
         System.out.println( "Hello World!" );
         HashSet<Player> seedVertices = new HashSet<Player>();
-        int initV = 5000;
-        int addE = 7;
+        int initV = 100;
+        int addE = 10;
         int iter = 5000;
-
+        int totaln = initV + iter;
         BarabasiAlbertGenerator<Player, Integer> graph = new BarabasiAlbertGenerator<Player,Integer>(
-        new gf(), new playerFactory('A'), new ef(),initV,addE,1023,seedVertices);
-
+        new GraphFactory(), new PlayerFactory('A'), new EdgeFactory(),initV,addE,1023,seedVertices);
 
         Graph<Player, Integer> g = graph.create();
         graph.evolveGraph(iter);
-        System.out.println(g);
-
-        Ultimatum ug = new Ultimatum(g);
-
-        for( Player p1:  (Collection<Player>) g.getVertices() ){
-            System.out.println(p1.toString2());
-        }
-
-       System.out.println("playGame");
-
-        //play game
-        ug.runGame(10000);
-
-        for( Player p1:  (Collection<Player>) g.getVertices() ){
-            System.out.println(p1.toString2());
-        }
-
-
-        System.out.println(g);
-
-        System.out.println(ug.averageP());
-
-     
+        Ultimatum ug = new Ultimatum(g,true);
+        ug.runGame(200);
+        ug.plot(10,totaln);
+        System.out.println("average P: " + ug.averageP());
+        System.out.println("average fitness: " + ug.averageFitness());
+ 
     }
 
 
