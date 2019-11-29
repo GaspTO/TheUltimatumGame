@@ -1,6 +1,10 @@
 package com.ist.rc2;
 
 class Player{
+    enum civilStates {
+        COOPERATOR,
+        ROGUE
+    }
 
 	public double p;
     public double q;
@@ -10,6 +14,8 @@ class Player{
     public double futureq;
     public double fitness;
     public int id;
+    civilStates state = civilStates.COOPERATOR;
+    civilStates nextstate = civilStates.COOPERATOR;
     public Player(double _p, double _q,int _id){
         p = _p;
         futurep = p;
@@ -20,7 +26,6 @@ class Player{
     }
     
     public double getP() {
-        System.out.println("ps" + p);
 		return p;
 	}
 
@@ -52,6 +57,26 @@ class Player{
 		this.id = id;
 	}
 
+    public void nextTurnRogue(){
+        state = civilStates.ROGUE;
+    }
+
+    public void nextTurnCooperator(){
+        state = civilStates.COOPERATOR;
+    }
+
+    public civilStates getCivilState(){
+        return state;
+    }
+
+    public civilStates getNextCivilState(){
+        return nextstate;
+    }
+
+    public void advanceToNextTurnState(){
+        state = nextstate;
+        //the nextstate remains the same until opposite order
+    }
     public void addFitness(double u){
         fitness = fitness + u;
     }

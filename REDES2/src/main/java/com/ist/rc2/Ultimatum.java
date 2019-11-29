@@ -30,15 +30,13 @@ import org.jfree.data.xy.XYSeriesCollection;
 import edu.uci.ics.jung.graph.Graph;
 
 class Ultimatum extends Game {
-    
-    public Boolean imitation;
-    public Ultimatum(Graph<Player, Integer> _g,Boolean _imitation){
+   
+    public Ultimatum(Graph<Player, Integer> _g){
         super(_g);
-        imitation = _imitation;
     }
 
     //what do the players do when they interact?
-    public static void playerInteraction(Player p1, Player p2){
+    public void playerInteraction(Player p1, Player p2){
         if(p2.q <= p1.p){
             p2.addFitness(p1.p);
             p1.addFitness(1.0-p1.p);
@@ -46,7 +44,7 @@ class Ultimatum extends Game {
     }
 
     //how is strategy of p1 updated? (with a probability)
-    public static void updateStrategy(Player p1, Player p2, Double prob){
+    public void updateStrategy(Player p1, Player p2, Double prob){
        Random r = new Random();
        if(r.nextDouble() < prob){
             p1.updateFuturePQ(p2.p,p2.q);
@@ -64,6 +62,7 @@ class Ultimatum extends Game {
         }
     }
 
+    //fitness back to 0 and update p and q
     public void init( Random rand){
         //for each player reset fitness
         for( Player p1:  (Collection<Player>) g.getVertices() ){
@@ -72,27 +71,27 @@ class Ultimatum extends Game {
         }
     }
 
+    
     public void develop(Random rand){
         //for each p1 play against all the p2 neighbors
         for( Player p1:  (Collection<Player>) g.getVertices() ){
             for( Player p2: (Collection<Player>) g.getNeighbors(p1) ){
-                Ultimatum.playerInteraction(p1,p2);
+                playerInteraction(p1,p2);
             }
         }
     }
 
+    //update strategies
     public void finalize(Random rand){
-        if(imitation == true){
-        //for each p1, choose a random neightboard and update strategy
-            for( Player p1:  (Collection<Player>) g.getVertices() ){
-                //getsCollections.TransformsToArray[ Picks a random neighbor ]
-                if(g.getNeighborCount(p1) != 0){
-                    int l = rand.nextInt(g.getNeighborCount(p1));
-                    Player p2 = (Player) g.getNeighbors(p1).toArray()[l];
-                    Ultimatum.updateStrategy(p1,p2,selectProbability(p1,p2));
-                }
+    //for each p1, choose a random neightboard and update strategy
+        for( Player p1:  (Collection<Player>) g.getVertices() ){
+            //getsCollections.TransformsToArray[ Picks a random neighbor ]
+            if(g.getNeighborCount(p1) != 0){
+                int l = rand.nextInt(g.getNeighborCount(p1));
+                Player p2 = (Player) g.getNeighbors(p1).toArray()[l];
+                updateStrategy(p1,p2,selectProbability(p1,p2));
             }
-        } 
+        }
     }
 
     

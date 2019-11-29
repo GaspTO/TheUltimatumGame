@@ -48,11 +48,18 @@ import java.lang.Math;
 public class PlotChart extends JFrame {
     public double[] x;
     public double[] y;
-    public PlotChart(double[] _x, double[] _y) {
+    public String titulo;
+    public String xTitulo;
+    public String yTitulo;
+    public String jTitulo;
+    public PlotChart(double[] _x, double[] _y, String _titulo, String _yTitulo, String _xTitulo, String _jTitulo) {
+        jTitulo = _jTitulo;
+        yTitulo = _yTitulo;
+        xTitulo = _xTitulo;
+        titulo = _titulo;
         x = _x;
         y = _y;
         initUI();
-
     }
 
     private void initUI() {
@@ -65,7 +72,7 @@ public class PlotChart extends JFrame {
         add(chartPanel);
 
         pack();
-        setTitle("Line chart");
+        setTitle(jTitulo);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -75,7 +82,6 @@ public class PlotChart extends JFrame {
 
         XYSeries series = new XYSeries("2016");
         for( int i=0; i<x.length; i++ ){
-            System.out.println("----["+x[i]+"," + y[i]+"]");
             series.add(x[i],y[i]);
         }
         
@@ -89,9 +95,9 @@ public class PlotChart extends JFrame {
     private JFreeChart createChart(XYDataset dataset) {
 
         JFreeChart chart = ChartFactory.createXYLineChart(
-            "pDistribution", 
-            "p", 
-            "D(p)", 
+            titulo, 
+            xTitulo, 
+            yTitulo, 
             dataset, 
             PlotOrientation.VERTICAL,
             true, 
@@ -116,7 +122,7 @@ public class PlotChart extends JFrame {
         plot.setDomainGridlinePaint(Color.BLACK);
 
         chart.getLegend().setFrame(BlockBorder.NONE);
-        chart.setTitle(new TextTitle("pDistribution",
+        chart.setTitle(new TextTitle(titulo,
                          new Font("Serif", java.awt.Font.BOLD, 18)
                  )
          );
@@ -126,17 +132,17 @@ public class PlotChart extends JFrame {
     }
 
     //this actually creates the plot
-    public static void plot(double[] x, double[] y){
+    public static void plot(double[] x, double[] y, String _titulo, String _yTitulo, String _xTitulo, String _jTitulo){
         SwingUtilities.invokeLater(() -> {
-            PlotChart ex = new PlotChart(x,y);
+            PlotChart ex = new PlotChart(x,y,_titulo, _yTitulo, _xTitulo,_jTitulo);
             ex.setVisible(true);
         });
     }
 
     //P is continuos, decidebox decides which of N equal partitions from 0 to 1, number i gets in
-    public static int decideBox(int N, double i){
+    public static int decideBox(int N, double n){
         double step = 1.0/(N);
-        int k = (int)Math.round(i/step);
+        int k = (int)Math.round(n/step);
         return k;
     }
 }  

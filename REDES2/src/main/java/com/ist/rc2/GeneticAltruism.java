@@ -8,8 +8,8 @@ import edu.uci.ics.jung.graph.Graph;
 class GeneticAltruism extends Ultimatum {
 
     
-    public GeneticAltruism(Graph<Player, Integer> _g, Boolean _imitation){
-        super(_g, _imitation);
+    public GeneticAltruism(Graph<Player, Integer> _g){
+        super(_g);
     }
 
 
