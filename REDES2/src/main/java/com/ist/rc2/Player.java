@@ -14,8 +14,9 @@ class Player{
     public double futureq;
     public double fitness;
     public int id;
-    civilStates state = civilStates.COOPERATOR;
-    civilStates nextstate = civilStates.COOPERATOR;
+    private int numNeighbors;
+    private civilStates state = civilStates.COOPERATOR;
+    private civilStates nextstate = civilStates.COOPERATOR;
     public Player(double _p, double _q,int _id){
         p = _p;
         futurep = p;
@@ -25,6 +26,14 @@ class Player{
         fitness = 0;
     }
     
+    public int getNumNeighbors(){
+        return numNeighbors;
+    }
+
+    public void setNumNeighbors(int n){
+        numNeighbors = n;
+    }
+
     public double getP() {
 		return p;
 	}
@@ -58,11 +67,11 @@ class Player{
 	}
 
     public void nextTurnRogue(){
-        state = civilStates.ROGUE;
+        nextstate = civilStates.ROGUE;
     }
 
     public void nextTurnCooperator(){
-        state = civilStates.COOPERATOR;
+        nextstate = civilStates.COOPERATOR;
     }
 
     public civilStates getCivilState(){
@@ -74,6 +83,7 @@ class Player{
     }
 
     public void advanceToNextTurnState(){
+        System.out.println("PLayer: advance to next turn state");
         state = nextstate;
         //the nextstate remains the same until opposite order
     }
@@ -88,9 +98,12 @@ class Player{
         if(futureq != -1.0){
             q = futureq;  
         }
-        
         futurep = -1.0;
         futureq = -1.0;
+
+        state = nextstate;
+        
+
     }
     
     public void resetFitness(){

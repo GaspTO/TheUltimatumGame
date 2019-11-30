@@ -21,14 +21,21 @@ abstract class Game {
 
     //runs the games, loops over all vertexes and does stuff
     public void runGame(int rounds){
+        for( Player p1:  (Collection<Player>) g.getVertices() ){
+            p1.setNumNeighbors(g.getNeighborCount(p1));
+        }
+
         Random rand = new Random();
         for( int i = 0; i<rounds; i++){ //over rounds
+            //System.out.println("RAND = " + i);
             if(((double)i/rounds * 100.0) % 5== 0){
                 System.out.println("===========round=========:"+i );
             }
             init(rand);
             develop(rand);
-            finalize(rand);
+            if(i!=rounds-1){ //don't do the last one.
+                finalize(rand);
+            }
         }
     }
     
@@ -122,8 +129,9 @@ abstract class Game {
         int count = 0;
         for( Player p1:  (Collection<Player>) g.getVertices() ){
             total = total + p1.fitness;
-            count ++;      
+            count ++;
         }
+        
         return total/count;
     }  
 
@@ -138,4 +146,15 @@ abstract class Game {
         return total/count;
     }
 
+
+    //getter
+    public double averageQ(){
+        double total = 0.0;
+        int count = 0;
+        for( Player p1:  (Collection<Player>) g.getVertices() ){
+            total = total + p1.q;
+            count ++;     
+        }
+        return total/count;
+    }
 }
