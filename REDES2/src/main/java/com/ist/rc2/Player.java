@@ -6,12 +6,12 @@ class Player{
         ROGUE
     }
 
-	public double p;
-    public double q;
+	private double p;
+    private double q;
     //when updating, we put them first in the futures
     //and in the beg of the round, swap them with p and q
-    public double futurep;
-    public double futureq;
+    private double futurep;
+    private double futureq;
     public double fitness;
     public int id;
     private int numNeighbors;
@@ -39,7 +39,7 @@ class Player{
 	}
 
 	public void setP(double p) {
-		this.p = p;
+        this.p = p;
 	}
 
 	public double getQ() {
@@ -47,7 +47,7 @@ class Player{
 	}
 
 	public void setQ(double q) {
-		this.q = q;
+        this.q = q;
 	}
 
 	public double getFitness() {
@@ -112,7 +112,7 @@ class Player{
 
     public void updatePQ(double _p, double _q){
         p = _p;
-        q = _q;        
+        q = _q;      
     }
 
     public void updateFuturePQ(double _p, double _q){

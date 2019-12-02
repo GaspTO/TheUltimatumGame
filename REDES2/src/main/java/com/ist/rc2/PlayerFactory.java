@@ -6,7 +6,7 @@ import org.apache.commons.collections15.Factory;
 
 class PlayerFactory implements Factory<Player>{
     int count = 0;
-    Random r = new Random();
+    Random r = new Random(177);
     char tactic = 'A'; //A, B or C
     public PlayerFactory(char _tactic){
     	tactic = _tactic;

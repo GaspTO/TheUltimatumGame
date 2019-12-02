@@ -1,6 +1,7 @@
 package com.ist.rc2;
 
 import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Random;
 
 import edu.uci.ics.jung.graph.Graph;
@@ -13,15 +14,44 @@ class DefectingTaxationUG extends TaxationUG {
     public int turnedRogueOfficial = 0;
     private int turnedCooperator = 0;
     public int turnedCooperatorOfficial = 0;
+    private double std = (double)1/(double)3; //the std of the stolen normal
+    private Boolean rogueImitation;
+    private double oddRobbed = 0.0022;
     
-    public DefectingTaxationUG(Graph<Player, Integer> _g, double _taxation, double _u){
+    
+    public DefectingTaxationUG(Graph<Player, Integer> _g, double _taxation, double _u, Boolean _rogueImitaton){
         super(_g,_taxation,0);
         u = _u;
+        rogueImitation = _rogueImitaton;
     }
 
-    public DefectingTaxationUG(Graph<Player, Integer> _g, double _taxation,double _inneficiency, double _u){
+    public DefectingTaxationUG(Graph<Player, Integer> _g, double _taxation, double _inneficiency, double _u, Boolean _rogueImitation){
         super(_g,_taxation,_inneficiency);
         u = _u;        
+        rogueImitation = _rogueImitation;
+    }
+
+    public void plotP(int N){ 
+        int vNumber = g.getVertices().size();
+        double[] A = new double[N+1];
+        double[] B = new double[N+1];
+        for(int i = 0; i< N+1; i++){
+            double ii = (double) i;
+            A[i] = ii/N*100;
+            B[i] = 0.0;
+
+        }
+        for( Player p1:  (Collection<Player>) g.getVertices() ){
+            if(p1.getCivilState() == Player.civilStates.COOPERATOR){
+                int box = PlotChart.decideBox(N,p1.getP());
+                B[box] = B[box]+1;
+            }
+        }
+        for(int i=0; i<N+1; i++){
+            B[i] = B[i]/vNumber*100;
+        }
+
+        PlotChart.plot(A,B,"offer-p distribution","D(p)(%)","p(%)","Offer-p Chart");
     }
 
     //getter
@@ -43,6 +73,7 @@ class DefectingTaxationUG extends TaxationUG {
         int count = 0;
         for( Player p1:  (Collection<Player>) g.getVertices() ){
             if(p1.getCivilState() == Player.civilStates.ROGUE){
+                //System.out.println(p1.fitness);
                 total = total + p1.fitness;
                 count ++;
             }
@@ -69,7 +100,7 @@ class DefectingTaxationUG extends TaxationUG {
         int count = 0;
         for( Player p1:  (Collection<Player>) g.getVertices() ){
             if(p1.getCivilState() == Player.civilStates.COOPERATOR){
-                total = total + p1.p;
+                total = total + p1.getP();
                 count ++;
             } 
         }
@@ -82,7 +113,7 @@ class DefectingTaxationUG extends TaxationUG {
         int count = 0;
         for( Player p1:  (Collection<Player>) g.getVertices() ){
             if(p1.getCivilState() == Player.civilStates.COOPERATOR){
-                total = total + p1.q;
+                total = total + p1.getQ();
                 count ++;
             } 
         }
@@ -96,11 +127,11 @@ class DefectingTaxationUG extends TaxationUG {
         if(p1.getCivilState() == Player.civilStates.COOPERATOR){
             if(p2.getCivilState() == Player.civilStates.COOPERATOR){
                 if(r.nextDouble() < prob){
-                    p1.updateFuturePQ(p2.p,p2.q);
+                    p1.updateFuturePQ(p2.getP(),p2.getQ());
                 }
             }
             
-            else if(p2.getCivilState() == Player.civilStates.ROGUE){
+            else if( rogueImitation == true && p2.getCivilState() == Player.civilStates.ROGUE){
                 if(r.nextDouble() < prob){
                     p1.nextTurnRogue();
                     turnedRogue = turnedRogue + 1;
@@ -111,7 +142,7 @@ class DefectingTaxationUG extends TaxationUG {
         else if(p1.getCivilState() == Player.civilStates.ROGUE){
             if(p2.getCivilState() == Player.civilStates.COOPERATOR){
                 if(r.nextDouble() < prob){
-                    p1.updateFuturePQ(p2.p,p2.q);
+                    p1.updateFuturePQ(p2.getP(),p2.getQ());
                     p1.nextTurnCooperator();
                     turnedCooperator = turnedCooperator + 1;
                 }
@@ -175,14 +206,11 @@ class DefectingTaxationUG extends TaxationUG {
         for( Player p1:  (Collection<Player>) g.getVertices() ){ 
             
             if(p1.getCivilState() == Player.civilStates.ROGUE){
-                
-                for(Player p2: (Collection<Player>) g.getNeighbors(p1)){
-                    steal(p1,p2,rand.nextGaussian()*1/3);
-                }
-                
+                ArrayList<Player> neigh = new ArrayList<Player>( (Collection<Player>) g.getNeighbors(p1));
+                //steal(p1,p2,rand.nextGaussian()*std);
+                steal(p1,neigh.get(rand.nextInt(neigh.size())),rand.nextDouble());                
             }
-        }
-        
+        }        
      }
 
 
@@ -243,7 +271,6 @@ class DefectingTaxationUG extends TaxationUG {
         NormalDistribution normal = new NormalDistribution(_u,o);
         Random r = new Random();
         double prob = normal.cumulativeProbability(avNeighborFitness/p1.getFitness());
-        //System.out.println("\t avNeighFitness="+ avNeighborFitness + " and mine=" + p1.getFitness() +  "  prob=" + prob + " std = " + o + " rate=" + avNeighborFitness/p1.getFitness() + " nn=" + g.getNeighborCount(p1)  );   
         if(p1.fitness < avNeighborFitness){
             if(r.nextDouble() < prob){  
                 

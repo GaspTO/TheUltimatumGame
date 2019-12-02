@@ -9,7 +9,8 @@ import java.util.Random;
 
 abstract class Game {
     public Graph<Player, Integer> g;
-
+    private Boolean shutup = true;
+    private int pplot = 0;
     public Game(Graph<Player, Integer> _g){
         g = _g;
     }
@@ -25,17 +26,15 @@ abstract class Game {
             p1.setNumNeighbors(g.getNeighborCount(p1));
         }
 
-        Random rand = new Random();
+        Random rand = null;
         for( int i = 0; i<rounds; i++){ //over rounds
             //System.out.println("RAND = " + i);
-            if(((double)i/rounds * 100.0) % 5== 0){
+            if( shutup == false && ((double)i/rounds * 100.0) % 5== 0){
                 System.out.println("===========round=========:"+i );
             }
             init(rand);
             develop(rand);
-            if(i!=rounds-1){ //don't do the last one.
-                finalize(rand);
-            }
+            finalize(rand);
         }
     }
     
@@ -52,14 +51,38 @@ abstract class Game {
 
         }
         for( Player p1:  (Collection<Player>) g.getVertices() ){
-            int box = PlotChart.decideBox(N,p1.p);
+            int box = PlotChart.decideBox(N,p1.getP());
             B[box] = B[box]+1;
         }
         for(int i=0; i<N+1; i++){
             B[i] = B[i]/vNumber*100;
         }
 
-        PlotChart.plot(A,B,"offer-p distribution","D(p)(%)","p(%)","Offer-p Chart");
+        PlotChart.plot(A,B,"offer-p distribution","D(p)(%)","p(%)","Offer-p Chart " + pplot);
+        pplot ++;
+    }
+
+        //CREATES THE PLOT by calling plotchart
+    //N: number of x's or "boxes" in graph
+    public void plotQ(int N){ 
+        int vNumber = g.getVertices().size();
+        double[] A = new double[N+1];
+        double[] B = new double[N+1];
+        for(int i = 0; i< N+1; i++){
+            double ii = (double) i;
+            A[i] = ii/N*100;
+            B[i] = 0.0;
+
+        }
+        for( Player p1:  (Collection<Player>) g.getVertices() ){
+            int box = PlotChart.decideBox(N,p1.getQ());
+            B[box] = B[box]+1;
+        }
+        for(int i=0; i<N+1; i++){
+            B[i] = B[i]/vNumber*100;
+        }
+
+        PlotChart.plot(A,B,"offer-p distribution","D(p)(%)","q(%)","Offer-p Chart");
     }
 
     //CREATES THE PLOT by calling plotchart
@@ -121,6 +144,7 @@ abstract class Game {
         }
 
         PlotChart.plot(A,B,"fitness distribution","D(fitness)(%)","fitness(%)", "Fitness Chart");
+        
     }
 
     //getter
@@ -140,7 +164,7 @@ abstract class Game {
         double total = 0.0;
         int count = 0;
         for( Player p1:  (Collection<Player>) g.getVertices() ){
-            total = total + p1.p;
+            total = total + p1.getP();
             count ++;     
         }
         return total/count;
@@ -152,9 +176,39 @@ abstract class Game {
         double total = 0.0;
         int count = 0;
         for( Player p1:  (Collection<Player>) g.getVertices() ){
-            total = total + p1.q;
+            total = total + p1.getQ();
             count ++;     
         }
         return total/count;
+    }
+
+    //getter
+    public double averageDegree(){
+        double total = 0.0;
+        int count = 0;
+        for( Player p1:  (Collection<Player>) g.getVertices() ){
+            total = total + g.getNeighborCount(p1);
+            count ++;     
+        }
+        return total/count;
+    }
+
+    public double averageInequality(){
+        double total = 0.0;
+        int count = 0;
+        double neighAVFitness;
+        for( Player p1:  (Collection<Player>) g.getVertices() ){ 
+            double neighborFitness = 0.0;
+            if(p1.getNumNeighbors() == 0){
+                continue;
+            }
+            for( Player p2: (Collection<Player>) g.getNeighbors(p1)){
+                neighborFitness = neighborFitness + p2.getFitness();
+            }
+            neighAVFitness = neighborFitness/p1.getNumNeighbors();
+            total = total + neighAVFitness/p1.getFitness();
+            count = count + 1;
+        }
+        return total/count;  
     }
 }
